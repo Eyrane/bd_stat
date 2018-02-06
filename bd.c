@@ -41,23 +41,23 @@ void *io_base;
 
 void relative_init(int offset)
 {
-	*((unsigned long long *)(io_base + INIT_REG0_OFFSET + offset)) = 0x8;
-	*((unsigned long long *)(io_base + INIT_REG1_OFFSET + offset)) = 0x1;
-	*((unsigned long long *)(io_base + INIT_REG2_OFFSET + offset)) = 0x6;
-	*((unsigned long long *)(io_base + INIT_REG3_OFFSET + offset)) = 0x10;
-	*((unsigned long long *)(io_base + INIT_REG4_OFFSET + offset)) = 0x8;
-	*((unsigned long long *)(io_base + INIT_REG5_OFFSET + offset)) = 0x10;
+	*((unsigned long *)(io_base + INIT_REG0_OFFSET + offset)) = 0x8;
+	*((unsigned long *)(io_base + INIT_REG1_OFFSET + offset)) = 0x1;
+	*((unsigned long *)(io_base + INIT_REG2_OFFSET + offset)) = 0x6;
+	*((unsigned long *)(io_base + INIT_REG3_OFFSET + offset)) = 0x10;
+	*((unsigned long *)(io_base + INIT_REG4_OFFSET + offset)) = 0x8;
+	*((unsigned long *)(io_base + INIT_REG5_OFFSET + offset)) = 0x10;
 	//printf("iobase: %x, INIT_REG0_OFFSET: %x, offeset: %x,reg=%x \n", (int)io_base, (int)INIT_REG0_OFFSET, (int)offset, (int)(io_base + INIT_REG0_OFFSET + offset));
 }
 
 void all_trigger(void)
 {
-	*((unsigned long long *)(io_base + TRIGGER_OFFSET + CPU_MSCH_OFFSET)) = 0x1;
-	*((unsigned long long *)(io_base + TRIGGER_OFFSET + GPU_MSCH_OFFSET)) = 0x1;
-	*((unsigned long long *)(io_base + TRIGGER_OFFSET + PERI_MSCH_OFFSET)) = 0x1;
-	*((unsigned long long *)(io_base + TRIGGER_OFFSET + VOP0_MSCH_OFFSET)) = 0x1;
-	*((unsigned long long *)(io_base + TRIGGER_OFFSET + VOP1_MSCH_OFFSET)) = 0x1;
-	*((unsigned long long *)(io_base + TRIGGER_OFFSET + VIDEO_MSCH_OFFSET)) = 0x1; 
+	*((unsigned long *)(io_base + TRIGGER_OFFSET + CPU_MSCH_OFFSET)) = 0x1;
+	*((unsigned long *)(io_base + TRIGGER_OFFSET + GPU_MSCH_OFFSET)) = 0x1;
+	*((unsigned long *)(io_base + TRIGGER_OFFSET + PERI_MSCH_OFFSET)) = 0x1;
+	*((unsigned long *)(io_base + TRIGGER_OFFSET + VOP0_MSCH_OFFSET)) = 0x1;
+	*((unsigned long *)(io_base + TRIGGER_OFFSET + VOP1_MSCH_OFFSET)) = 0x1;
+	*((unsigned long *)(io_base + TRIGGER_OFFSET + VIDEO_MSCH_OFFSET)) = 0x1; 
 }
 
 int get_ddr_freq()
@@ -73,7 +73,7 @@ int get_ddr_freq()
 	}
 	while ( fgets(file_str,sizeof(file_str),fp) )
 	{
-		if( strstr(file_str,"sclk_ddrc") )
+		if( strstr(file_str,"clk_ddrmsch") )
 		{
 			//printf("\n%s\n",file_str);
 			
@@ -97,16 +97,16 @@ int get_ddr_freq()
 void get_bd(void)
 {
 	unsigned long long ddrfreq,cpu_count,gpu_count,video_count,vop0_count,vop1_count,peri_count,totalcount = 0;
-	cpu_count = (*((unsigned long long *)(io_base + COUNTER_REG3_OFFSET + CPU_MSCH_OFFSET))<<16) | *((unsigned long long *)(io_base + COUNTER_REG2_OFFSET + CPU_MSCH_OFFSET));						
-	vop0_count = (*((unsigned long long *)(io_base + COUNTER_REG3_OFFSET + VOP0_MSCH_OFFSET))<<16) | *((unsigned long long *)(io_base + COUNTER_REG2_OFFSET + VOP0_MSCH_OFFSET));	       
-	video_count = (*((unsigned long long *)(io_base + COUNTER_REG3_OFFSET + VIDEO_MSCH_OFFSET))<<16) | *((unsigned long long *)(io_base + COUNTER_REG2_OFFSET + VIDEO_MSCH_OFFSET));
-	gpu_count = (*((unsigned long long *)(io_base + COUNTER_REG3_OFFSET + GPU_MSCH_OFFSET))<<16) | *((unsigned long long *)(io_base + COUNTER_REG2_OFFSET + GPU_MSCH_OFFSET));
-	peri_count = (*((unsigned long long *)(io_base + COUNTER_REG3_OFFSET + PERI_MSCH_OFFSET))<<16) | *((unsigned long long *)(io_base + COUNTER_REG2_OFFSET + PERI_MSCH_OFFSET));
-	vop1_count = (*((unsigned long long *)(io_base + COUNTER_REG3_OFFSET + VOP1_MSCH_OFFSET))<<16) | *((unsigned long long *)(io_base + COUNTER_REG2_OFFSET + VOP1_MSCH_OFFSET));
+	cpu_count = (*((unsigned long *)(io_base + COUNTER_REG3_OFFSET + CPU_MSCH_OFFSET))<<16) | *((unsigned long *)(io_base + COUNTER_REG2_OFFSET + CPU_MSCH_OFFSET));						
+	vop0_count = (*((unsigned long *)(io_base + COUNTER_REG3_OFFSET + VOP0_MSCH_OFFSET))<<16) | *((unsigned long *)(io_base + COUNTER_REG2_OFFSET + VOP0_MSCH_OFFSET));	       
+	video_count = (*((unsigned long *)(io_base + COUNTER_REG3_OFFSET + VIDEO_MSCH_OFFSET))<<16) | *((unsigned long *)(io_base + COUNTER_REG2_OFFSET + VIDEO_MSCH_OFFSET));
+	gpu_count = (*((unsigned long *)(io_base + COUNTER_REG3_OFFSET + GPU_MSCH_OFFSET))<<16) | *((unsigned long *)(io_base + COUNTER_REG2_OFFSET + GPU_MSCH_OFFSET));
+	peri_count = (*((unsigned long *)(io_base + COUNTER_REG3_OFFSET + PERI_MSCH_OFFSET))<<16) | *((unsigned long *)(io_base + COUNTER_REG2_OFFSET + PERI_MSCH_OFFSET));
+	vop1_count = (*((unsigned long *)(io_base + COUNTER_REG3_OFFSET + VOP1_MSCH_OFFSET))<<16) | *((unsigned long *)(io_base + COUNTER_REG2_OFFSET + VOP1_MSCH_OFFSET));
 	totalcount = cpu_count + gpu_count+ peri_count + vop0_count + vop1_count + video_count;
-    ddrfreq = get_ddr_freq();
+	ddrfreq = get_ddr_freq();
 	printf("cpu_count = %-12lld  vop0_count = %-12lld  vop1_count = %-12lld  video_count = %-12lld  gpu_count = %-12lld  peri_count = %-12lld  totalcount = %-12lld  ddrcount = %-12lld  total/ddr = %f\n", 
-			cpu_count,vop0_count,vop1_count,video_count,gpu_count,peri_count,totalcount,ddrfreq*8,(0.0+totalcount)/(0.0+ddrfreq*8));	
+			cpu_count,vop0_count,vop1_count,video_count,gpu_count,peri_count,totalcount,ddrfreq*8,(0.0+totalcount)/(0.0+ddrfreq*8));
 }
 
 int main()
@@ -119,7 +119,7 @@ int main()
 		printf("open /dev/mem failed");
 		exit(1);
 	}
-	io_base = mmap64(NULL, RK322X_DDR_MSCH_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, mfd, RK322X_DDR_MSCH_PHYS);
+	io_base = mmap(NULL, RK322X_DDR_MSCH_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, mfd, RK322X_DDR_MSCH_PHYS);
 	if (io_base == (void *)(-1)) {
 		fprintf(stderr, "mmap() failed: %s\n", strerror(errno));
 		exit(1);
